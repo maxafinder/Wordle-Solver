@@ -3,6 +3,7 @@ Developed by: Max Finder
 --description of project--
 
 
-Description of tools used:
+
+NOTES:
 Uses Pipenv Python package managing tool to manage dependencies.
 
