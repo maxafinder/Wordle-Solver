@@ -17,10 +17,11 @@ def get_board(driver):
 
 
 # Gets the rows of the board in an array of Beautiful Soup objects.
-# @param board -> a selenium WebElement containing <div id="board">
+# @param driver -> the selenium webdriver that opens Wordle
 # @return -> array of Beautiful Soup objects containing board.
-def get_rows(board):
+def get_rows(driver):
 	# get the html of the gameboard
+	board = get_board(driver)
 	board_html = board.get_attribute("innerHTML")
 
 	# parse the html of the gameboard
