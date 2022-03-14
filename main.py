@@ -7,7 +7,7 @@ from board import get_board, get_rows, get_tiles
 from keyboard import get_keyboard, get_keys, click_key, guess_word
 from letter import get_letter_state, get_possbile_letter_positions, get_letter_states 
 from print import print_dictionary, print_tiles, print_rows, print_keys
-
+from word_bank import get_answer_bank, get_guess_bank
 
 
 if __name__ == "__main__":
@@ -60,7 +60,14 @@ if __name__ == "__main__":
 
 	# get the possible letter positions
 	possible_positions = get_possbile_letter_positions(driver, keys)
-	print_dictionary(possible_positions)
+	#print_dictionary(possible_positions)
+
+	# get list of possible 5 letter words
+	answers = get_answer_bank()
+	guesses = get_guess_bank()
+	print("Answers:", len(answers))
+	print("Guesses:", len(guesses))
+
 
 
 	# close the webdriver
