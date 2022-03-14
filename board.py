@@ -16,7 +16,7 @@ def get_board(driver):
 	return board
 
 
-# Gets the rows of the board in an array of Beautiful Soup objects.
+# Gets the rows of the board in a list of Beautiful Soup objects.
 # @param driver -> the selenium webdriver that opens Wordle
 # @return -> array of Beautiful Soup objects containing board.
 def get_rows(driver):
@@ -30,9 +30,28 @@ def get_rows(driver):
 	return rows
 
 
-# Prints the rows of the board
-# @param rows -> array of BeautifulSoup objects of the game rows.
-def print_rows(rows):
-	for i in rows:
-		print(i)
-	
+# Gets the row tiles of the board.
+# @param driver -> the selenium webdriver that opens Wordle.
+# @return -> a list of rows each containing a list of 5 tiles.
+def get_tiles(driver):
+	# get the game-app root
+	game_app = driver.find_element(By.TAG_NAME, "game-app")
+	game_app_root = driver.execute_script("return arguments[0].shadowRoot", game_app)
+
+	# where we store the rows of tiles	
+	row_tiles = []
+
+	# get list of the <game-row> elements 
+	board = game_app_root.find_element(By.ID, "board")
+	game_rows = game_app_root.find_elements(By.TAG_NAME, "game-row")
+
+	# access shadow DOM in each game-row and get the tiles
+	for game_row in game_rows:
+		game_row_root = driver.execute_script("return arguments[0].shadowRoot", game_row)
+		row = game_row_root.find_element(By.CLASS_NAME, "row")
+		row_html = row.get_attribute("innerHTML")
+		soup = BeautifulSoup(row_html, 'html.parser')
+		tiles = soup.contents
+		row_tiles.append(tiles)
+	return row_tiles
+

@@ -1,6 +1,4 @@
 from time import sleep
-from bs4 import BeautifulSoup
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -35,11 +33,10 @@ def get_keys(driver):
 # @param val -> the value of the key we want to click.
 def click_key(keys, val):
 	# find the key in keys with val
-	for k in keys:
-		if k.text == val:
-			key = k
-	# click the key
-	key.send_keys(Keys.ENTER)
+	for key in keys:
+		if key.text.lower() == val.lower():
+			# click the key
+			key.send_keys(Keys.ENTER)
 
 
 # Guesses the word and waits for board to update.
@@ -53,4 +50,5 @@ def guess_word(keys, word):
 		click_key(keys, i)
 	click_key(keys, "enter")
 	sleep(2)
+
 
