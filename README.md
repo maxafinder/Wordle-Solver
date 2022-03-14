@@ -38,7 +38,7 @@ How to use Chrome driver (Windows):
 How to run:
 
 Navigate to the projects directoy and run the virtual environment by running the command "pipenv shell"
-Then run the program with "python3 main.py"
+Then run the program with "python3 main.py <chrome || safari>"
 
 -------------------------------------------------------------------
 
