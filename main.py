@@ -1,3 +1,4 @@
+from tkinter import W
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -8,6 +9,7 @@ from keyboard import get_keyboard, get_keys, click_key, guess_word
 from letter import get_letter_state, get_possbile_letter_positions, get_letter_states 
 from print import print_dictionary, print_tiles, print_rows, print_keys
 from word_bank import get_answer_bank, get_guess_bank
+from next_guess import eliminate_answers
 
 
 if __name__ == "__main__":
@@ -26,28 +28,23 @@ if __name__ == "__main__":
 	keys = get_keys(driver)
 
 	# guess word
-	guess_word(keys, "steep")
+	guess_word(keys, "lease")
+
+	## Get keys after guessing word
 	keys = get_keys(driver)
 
-	# Get keys after guessing word
-	keys = get_keys(driver)
 
+	## Guess more words
 
-	# Guess more words
-
-	#guess_word(keys, "zebra")
+	#guess_word(keys, "crane")
 	#keys = get_keys(driver)
 
-	#guess_word(keys, "grape")
+	#guess_word(keys, "bends")
 	#keys = get_keys(driver)
 
-	#guess_word(keys, "alone")
+	#guess_word(keys, "which")
 	#keys = get_keys(driver)
 
-	# start typing "new"
-	click_key(keys, "n")
-	click_key(keys, "e")
-	click_key(keys, "w")
 
 
 	# get the state of each letter
@@ -56,18 +53,19 @@ if __name__ == "__main__":
 
 	# get the row tiles
 	tiles = get_tiles(driver)
-	#print_tiles(tiles)
+	print_tiles(tiles)
 
 	# get the possible letter positions
 	possible_positions = get_possbile_letter_positions(driver, keys)
-	#print_dictionary(possible_positions)
+	print_dictionary(possible_positions)
 
 	# get list of possible 5 letter words
 	answers = get_answer_bank()
 	guesses = get_guess_bank()
-	print("Answers:", len(answers))
-	print("Guesses:", len(guesses))
 
+	answers = eliminate_answers(answers, possible_positions)
+	for a in answers:
+		print(a)
 
 
 	# close the webdriver
