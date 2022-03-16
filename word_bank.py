@@ -238,7 +238,8 @@ def get_answer_bank():
 # Gets the list of all the 5 letter words that are valid guesses.
 # @return -> a list of 5 letter words.
 def get_guess_bank():
-	return ["aahed","aalii","aargh","aarti","abaca","abaci","abacs","abaft","abaka","abamp",
+	guesses = get_answer_bank()
+	other = ["aahed","aalii","aargh","aarti","abaca","abaci","abacs","abaft","abaka","abamp",
 					"aband","abash","abask","abaya","abbas","abbed","abbes","abcee","abeam","abear",
 					"abele","abers","abets","abies","abler","ables","ablet","ablow","abmho","abohm",
 					"aboil","aboma","aboon","abord","abore","abram","abray","abrim","abrin","abris",
@@ -1306,3 +1307,7 @@ def get_guess_bank():
 					"zouks","zowee","zowie","zulus","zupan","zupas","zuppa","zurfs","zuzim","zygal",
 					"zygon","zymes","zymic"]
 
+	for i in other:
+		guesses.append(i)
+	return guesses
+	

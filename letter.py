@@ -120,10 +120,16 @@ def get_possbile_letter_positions(driver, keys):
 
 				# if evaluation of letter is "correct"
 				elif evaluation == "correct":
+					print(letter, "is CORRECT at position", tile + 1)
+
 					# remove position from all other letters
 					for l in possible_positions:
-						if l != letter:
-							possible_positions[l].remove(tile + 1)
+						if l.lower() != letter.lower():
+							try:
+								possible_positions[l].remove(tile + 1)
+							except:
+								continue
+
 
 				# if evaluation of letter is "present"
 				elif evaluation == "present": 
@@ -131,6 +137,7 @@ def get_possbile_letter_positions(driver, keys):
 					possible_positions[letter].remove(tile + 1)
 
 			except: # haven't guessed in this row yet
+				print("here", row, tile)
 				break
 	return possible_positions
 
