@@ -1,9 +1,10 @@
+from copy import deepcopy
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from board import get_tiles
 from print import print_dictionary
+
 
 # Gets the state of a letter
 # @param keys -> list of selenium WebElements that are the keyboard keys.
@@ -54,21 +55,28 @@ def get_correct_letters(tiles):
 	return correct_letters
 
 
-# Determines if the evaluation of a letter is "present" somewhere in the guess.
-# @param row -> the row of the guess we are evaluating.
-# @param l -> the letter that we are looking for.
-# @return -> True if a letter has evaluation "present" somewhere in the guess, otherwise False.
-def is_present_in_guess(row, l):
-	for tile in range(0, 5):
-		try:
-			letter = row[tile]["letter"]
-			evaluation = row[tile]["evaluation"] # absent, present, or correct
 
-			if letter == l and evaluation == "present":
-				return True
-		except:
-			return False
-		return False
+# Determines if the evaluation of a letter is "present" somewhere in the guess.
+# @param guess -> the word that we guessed.
+# @param pattern -> list of evaluations from the word we guessed ("absent", "present", "correct").
+# @param letter -> the letter that we are looking for.
+# @return -> True if a letter has evaluation "present" somewhere in the guess, otherwise False.
+def is_present_in_guess(guess, pattern, letter):
+	for i in range(0, 5):
+		if guess[i] == letter  and pattern[i] == "present":
+			return True
+	return False
+
+
+#
+def initialize_possible_positions(keys):
+	possible_positions = {}
+	for key in keys:
+		if len(key.text) == 1: # is a letter
+			possible_positions[key.text.lower()] = [1, 2, 3, 4, 5]
+	return possible_positions
+
+
 
 
 
@@ -77,70 +85,65 @@ def is_present_in_guess(row, l):
 # @param driver -> the selenium webdriver that opens Wordle
 # @param keys -> list of selenium WebElements that are the keyboard keys.
 # @return -> a dictionary that maps each letter to a list of possible positions in the word (1-5).
-def get_possbile_letter_positions(driver, keys):
-	# get the tiles and states for each letter
-	tiles = get_tiles(driver)
-	states = get_letter_states(keys)
+def get_possbile_letter_positions_after_guess(guess, pattern, possible_positions):
+	new_possible_positions = deepcopy(possible_positions)	
 
-	# create dictionary with all letter positions
-	# TODO: initialize with possible letter positions from word bank
+	for i in range(0, 5):
+		# get the letter and evaluation
+		letter = guess[i]
+		evaluation = pattern[i] # absent, present, or correct
 
-	possible_positions = {}
+		# if evaluation of letter is absent
+		if evaluation == "absent":
+			# remove this position
+			try:
+				new_possible_positions[letter].remove(i + 1)
+			except:
+				pass
+
+			# check to see if the letter could still could be in word
+			for l in range(0, 5):
+				# if there are multiple instances of the letter (not totally absent)
+				if guess[l] == letter and (pattern[l] == "correct" or pattern[l] == "present"):
+					# if it is NOT still present somewhere in word, then remove possible
+					# positions besides correct ones for this letter
+					if not is_present_in_guess(guess, pattern, letter):
+						for j in range(0, 5):
+							if guess[j] != letter or pattern[j] != "correct":
+								try:
+									new_possible_positions[letter].remove(j + 1)
+								except:
+									continue
+					break
+				
+
+		# if evaluation of letter is "correct"
+		elif evaluation == "correct":
+			# remove position from all other letters
+			for l in new_possible_positions:
+				if l.lower() != letter.lower():
+					try:
+						new_possible_positions[l].remove(i + 1)
+					except:
+						continue
+
+		# if evaluation of letter is "present"
+		elif evaluation == "present": 
+			# remove the position with evaluation "present" from possible positions
+			new_possible_positions[letter].remove(i + 1)
+	return new_possible_positions
+
+
+
+
+#
+def get_letter_frequencies(words, keys):
+	letter_frequencies = {}
 	for key in keys:
 		if len(key.text) == 1: # is a letter
-			possible_positions[key.text.lower()] = [1, 2, 3, 4, 5]
+			letter_frequencies[key.text.lower()] = 0
 
-	# go through the tiles and extract information
-	for row in tiles:
-		for tile in range(0, 5):
-			# try to get the letter and evaluation
-			try:
-				letter = row[tile]["letter"]
-				evaluation = row[tile]["evaluation"] # absent, present, or correct
-
-
-				# if evaluation of letter is absent
-				if evaluation == "absent":
-					# check to see if the letter could still could be in word
-					if states[letter] == "absent": # not in word
-						possible_positions[letter].clear()
-
-					elif states[letter] == "correct": # is correct in word
-						# gets the correct letters that have been discovered for each position
-						correct_letters = get_correct_letters(tiles)
-
-						# if there could still be another instance of the letter besides the correct one
-						if is_present_in_guess(row, letter):
-							possible_positions[letter].remove(tile + 1)
-						else: # remove possible positions besides correct ones for this letter
-							for i in range(1, 6):
-								if correct_letters[i] != letter:
-									possible_positions[letter].remove[i]
-
-
-				# if evaluation of letter is "correct"
-				elif evaluation == "correct":
-					print(letter, "is CORRECT at position", tile + 1)
-
-					# remove position from all other letters
-					for l in possible_positions:
-						if l.lower() != letter.lower():
-							try:
-								possible_positions[l].remove(tile + 1)
-							except:
-								continue
-
-
-				# if evaluation of letter is "present"
-				elif evaluation == "present": 
-					# remove the position with evaluation "present" from possible positions
-					possible_positions[letter].remove(tile + 1)
-
-			except: # haven't guessed in this row yet
-				print("here", row, tile)
-				break
-	return possible_positions
-
-
-
-
+	for word in words:
+		for letter in word:
+			letter_frequencies[letter] = letter_frequencies[letter] + 1
+	return letter_frequencies	

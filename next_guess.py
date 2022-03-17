@@ -1,28 +1,71 @@
+from copy import deepcopy
+from letter import get_letter_frequencies
+from pattern import get_pattern_from_words, compare_patterns
+from print import print_dictionary
 
 
 
-
-# Eliminates answers from the list of the answers based on the possible positions of
-# letters that are left.
-# @param answers -> list of words that can be answers.
-# @param possible_positions -> dictionary that maps each letter to a list of positions (1-5)
-# 														 that are still possible.
-# @return -> list of answers after eliminating ones that are not possible.
-def eliminate_answers(answers, possible_positions):
-	print("Answers before:", len(answers))
-
-	# Create copy of guesses list
+#
+def eliminate_answers(guess, pattern, answers):
 	new_answers = []
-	for w in answers:
-		new_answers.append(w)
 
-	# Eliminate impossible answers
-	for word in answers:
-		for i in range(0, 5):
-			if (i+1) not in possible_positions[word[i]]:
-				new_answers.remove(word)
-				break
-			
-	print("Answers after:", len(new_answers), "\n")
+	# check to see if answer gives us the same pattern against "guess"
+	for a in answers:
+		p = get_pattern_from_words(guess, a)
+		if compare_patterns(pattern, p):
+			new_answers.append(a)
 	return new_answers
 
+
+
+
+
+
+# 
+def get_words_information(guesses, answers, keys, possible_positions):
+	letter_frequencies = get_letter_frequencies(answers, keys)
+	words_information = {}
+
+	for word in guesses:
+		info = calculate_expected_information(word, answers, possible_positions, letter_frequencies)
+		words_information[word] = info
+	return words_information
+
+
+
+#
+def calculate_expected_information(word, answers, possible_positions, letter_frequencies):
+	information = 0
+	for i in range(0, len(word)):
+		letter = word[i]
+		if i + 1 in possible_positions[letter]:
+			information += letter_frequencies[letter]	
+		else:
+			information = 0
+			break	
+	return information
+
+
+
+#
+def sort_words_by_information(words_information):
+	sorted_words = []
+	for word in words_information:
+		insert_index = 0
+		for i in range(0, len(sorted_words)):
+			insert_index = i
+			if words_information[sorted_words[i]] < words_information[word]:
+				break
+			elif i == len(sorted_words) - 1:
+				insert_index += 1
+		sorted_words.insert(insert_index, word)
+	return sorted_words
+
+
+
+#
+def get_next_guess(guesses, answers, keys, possible_solutions):
+	words_information = get_words_information(guesses, answers, keys, possible_solutions)
+	sorted_words = sort_words_by_information(words_information)
+	next_guess = sorted_words[0]
+	return next_guess

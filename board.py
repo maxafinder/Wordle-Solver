@@ -32,7 +32,7 @@ def get_rows(driver):
 
 # Gets the row tiles of the board.
 # @param driver -> the selenium webdriver that opens Wordle.
-# @return -> a list of rows each containing a list of 5 tiles.
+# @return -> a list of rows each containing a list of 5 tiles wich are Beautiful Soup objects.
 def get_tiles(driver):
 	# get the game-app root
 	game_app = driver.find_element(By.TAG_NAME, "game-app")
@@ -55,3 +55,35 @@ def get_tiles(driver):
 		row_tiles.append(tiles)
 	return row_tiles
 
+
+
+#
+def get_pattern_from_row(row):
+	pattern = []
+	for tile in row:
+		try:
+			evaluation = tile["evaluation"]
+			pattern.append(evaluation)
+		except:
+			return -1
+	return pattern
+
+
+#
+def get_guess_from_row(row):
+	guess = []
+	for tile in row:
+		try:
+			letter = tile["letter"]
+			guess.append(letter)
+		except:
+			return -1
+	return guess
+
+
+#
+def is_correct(pattern):
+	for evaluation in pattern:
+		if evaluation != "correct":
+			return False
+	return True
