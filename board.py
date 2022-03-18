@@ -56,8 +56,10 @@ def get_tiles(driver):
 	return row_tiles
 
 
-
-#
+# Gets the pattern from the row of the board.
+# @param row -> a list of Beautiful Soup objects that are tile elements in the row.
+# @return -> a list of the evaluations "absent", "present", or "correct" for each
+# 					 position in the row, and -1 if we havn't guessed in this row.
 def get_pattern_from_row(row):
 	pattern = []
 	for tile in row:
@@ -69,7 +71,9 @@ def get_pattern_from_row(row):
 	return pattern
 
 
-#
+# Gets the guess at a row from the board.
+# @param row -> a list of Beautiful Soup objects that are tile elements in the row.
+# @return -> the guess from that row, -1 if we havn't guessed in that row.
 def get_guess_from_row(row):
 	guess = []
 	for tile in row:
@@ -81,9 +85,12 @@ def get_guess_from_row(row):
 	return guess
 
 
-#
+# Determines if a guess is correct based on pattern.
+# @param pattern -> a list of the evaluations "absent", "present", or "correct" for each
+# 					 position in the row. 
 def is_correct(pattern):
 	for evaluation in pattern:
 		if evaluation != "correct":
 			return False
 	return True
+

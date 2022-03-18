@@ -1,4 +1,5 @@
 from time import sleep
+from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -52,3 +53,25 @@ def guess_word(keys, word):
 	sleep(2)
 
 
+# Gets the state of a letter
+# @param keys -> list of selenium WebElements that are the keyboard keys.
+def get_letter_state(keys, val):
+	for key in keys:
+		if key.text.lower() == val.lower():
+			key_html = key.get_attribute("outerHTML")
+			soup = BeautifulSoup(key_html, 'html.parser')
+			try:
+				state = soup.contents[0]['data-state']
+				return state
+			except:
+				return ""
+
+
+# Creates a dictionary with the state of each letter a-z
+# @param keys -> list of selenium WebElements that are the keyboard keys.
+def get_letter_states(keys):
+	states = {}
+	for key in keys:
+		if len(key.text) == 1: # is a letter
+			states[key.text.lower()] = get_letter_state(keys, key.text)
+	return states

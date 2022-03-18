@@ -1,10 +1,10 @@
-
+from copy import copy
 
 
 # Get the pattern that would be reveals from a guess if we know the answer.
 # @param guess -> the word that we are guessing.
 # @param answer -> the answer to the wordle.
-# @return -> a list with the pattern that would be revealed
+# @return -> a list with the pattern that would be revealed.
 def get_pattern_from_words(guess, answer):
 	pattern = []
 
@@ -37,37 +37,44 @@ def get_pattern_from_words(guess, answer):
 	return pattern
 
 
-
-
+# Gets the frequencies of each pattern occuring for a given guess.
+# @param guess -> the word that we are calculating the pattern frequencies for.
+# @param answers -> a list of the words that are still possible answers.
+# @return -> a dictionary that maps the index of a pattern to the frequency that the
+#						 pattern occurs with the answers still left.
 def get_pattern_frequencies(guess, answers):
 	# initialize frequencies
 	frequencies = {}
-	for i in range(0, 243):
-		frequencies[i] = 0
 
 	for answer in answers:
 		pattern = get_pattern_from_words(guess, answer)	
 		index = get_index_from_pattern(pattern)
-		frequencies[index] += 1
+		if index in frequencies:
+			frequencies[index] += 1
+		else:
+			frequencies[index] = 1
 	return frequencies
 
 
-
-#
+# Gets the index (0-242) that corresponds to the given pattern. There are 3^5 possible
+# patterns and so each index relates to a unique pattern.
+# @param pattern -> a list of the evaluations "absent", "present", or "correct" for each
+# 					 position in the row. 
+# @return -> a number which is the index of the pattern.
 def get_index_from_pattern(pattern):
 	evaluations = {}
-	evaluations["absent"] = 0
-	evaluations["present"] = 1
-	evaluations["correct"] = 2
+	evaluations["a"] = 0
+	evaluations["p"] = 1
+	evaluations["c"] = 2
 
 	index = 0
 	for i in range(0, 5):
-		index += evaluations[pattern[i]] * pow(3, i)
+		index += evaluations[pattern[i][0]] * pow(3, i)
 	return index
 
 
-
-#
+# Returns patterns for each index that maps to them.
+# @return -> a dictionary that maps an index to the pattern.
 def get_index_patterns():
 	evaluations = ["absent", "present", "correct"]
 	patterns = {}
@@ -93,7 +100,10 @@ def get_index_patterns():
 	return patterns
 
 
-
+# Compares two patterns to determine if they are equal.
+# @param p1 -> the first pattern.
+# @param p2 -> the second pattern. 
+# @return -> True if the patterns are the same, False if they are different.
 def compare_patterns(p1, p2):
 	for i in range(0, 5):
 		if p1[i] != p2[i]:
