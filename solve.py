@@ -1,27 +1,27 @@
-from copy import copy, deepcopy
-from information import get_average_information, get_bits_of_information
 from keyboard import get_keys, guess_word
-from letter import get_possbile_letter_positions_after_guess, initialize_possible_positions
-from print import print_dictionary
 from word_bank import get_answer_bank, get_guess_bank
 from next_guess import get_next_guess, eliminate_answers
 from board import get_pattern_from_row, get_tiles, is_correct
 
-#
+# Solves the wordle.
+# @param driver -> the selenium webdriver that opens Wordle
+# @return -> a list where the first element is the correct answer to
+#				     the wordle and the second element is the number of guesses
+#						 it took to solve the wordle. It returns -1 if it couldn't
+#						 solve the wordle in 6 guesses. 
 def solve(driver):
 	# initialize guesses, answers, and keys
 	guesses = get_guess_bank()
 	answers = get_answer_bank()
 	keys = get_keys(driver)
-
 	print("possible answers left:", str(len(answers)), "\n")
-
 
 	# guess 6 words
 	for i in range(0, 6):
-
-		# get next guess and guess it
+		# calculate the next best guess
 		guess = get_next_guess(guesses, answers)
+
+		# guess the word
 		print("guessing:", guess)
 		guess_word(keys, guess)
 
@@ -40,8 +40,4 @@ def solve(driver):
 		print("possible answers left:", str(len(answers)), "\n")
 
 	return -1 # didn't solve
-
-
-
-
 
