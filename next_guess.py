@@ -1,4 +1,5 @@
 from copy import deepcopy
+from information import get_average_information
 from letter import get_letter_frequencies
 from pattern import get_pattern_from_words, compare_patterns
 from print import print_dictionary
@@ -15,35 +16,6 @@ def eliminate_answers(guess, pattern, answers):
 		if compare_patterns(pattern, p):
 			new_answers.append(a)
 	return new_answers
-
-
-
-
-
-
-# 
-def get_words_information(guesses, answers, keys, possible_positions):
-	letter_frequencies = get_letter_frequencies(answers, keys)
-	words_information = {}
-
-	for word in guesses:
-		info = calculate_expected_information(word, answers, possible_positions, letter_frequencies)
-		words_information[word] = info
-	return words_information
-
-
-
-#
-def calculate_expected_information(word, answers, possible_positions, letter_frequencies):
-	information = 0
-	for i in range(0, len(word)):
-		letter = word[i]
-		if i + 1 in possible_positions[letter]:
-			information += letter_frequencies[letter]	
-		else:
-			information = 0
-			break	
-	return information
 
 
 
@@ -64,8 +36,13 @@ def sort_words_by_information(words_information):
 
 
 #
-def get_next_guess(guesses, answers, keys, possible_solutions):
-	words_information = get_words_information(guesses, answers, keys, possible_solutions)
-	sorted_words = sort_words_by_information(words_information)
-	next_guess = sorted_words[0]
-	return next_guess
+def get_next_guess(guesses, answers):
+	average_info_bits = {}
+	for g in guesses:
+		avg_info = get_average_information(g, answers)
+		average_info_bits[g] = avg_info
+	sorted_words = sort_words_by_information(average_info_bits)
+	print("Top 5 next guesses:")
+	for i in range(0, 5):
+		print(sorted_words[i], average_info_bits[sorted_words[i]])
+	return sorted_words[0]

@@ -5,11 +5,11 @@ from selenium.webdriver.common.by import By
 from driver import get_driver
 from information import get_average_information
 from letter import get_possbile_letter_positions_after_guess, initialize_possible_positions
-from next_guess import eliminate_answers 
+from next_guess import eliminate_answers , sort_words_by_information
 from pattern import get_pattern_from_words, get_pattern_frequencies, get_index_patterns
 from solve import solve
 from print import print_dictionary
-from word_bank import get_answer_bank
+from word_bank import get_answer_bank, get_guess_bank
 from keyboard import get_keys
 
 
@@ -25,35 +25,23 @@ if __name__ == "__main__":
 	driver.get("https://www.nytimes.com/games/wordle/index.html")
 
 
-	# get the keys for testing
-	keys = get_keys(driver)
+	## get the keys for testing
+	#keys = get_keys(driver)
 
 
-	# Test information calculations
-	answers = get_answer_bank()
+	## Test information calculations
+	#answers = get_answer_bank()
+	#guesses = get_guess_bank()
 
-	# Do patterns determine which answers to eliminate
-	#guess = "crane"
-	#for i in range(0, 1):
-		#a = answers[i]	
-		#print(guess)
-		#print(a)
-		#possible_positions = initialize_possible_positions(keys)
-		#pattern = get_pattern_from_words(guess, a)
-		#print(pattern)
-		#print("---------------")
-		#possible_positions = get_possbile_letter_positions_after_guess(guess, pattern, possible_positions)
-		#new_answers = eliminate_answers(guess, pattern, answers, possible_positions)
-		#new_answers = new_eliminate_answers(guess, pattern, answers)
-		#for ans in new_answers:
-			#ans_pattern = get_pattern_from_words(guess, ans)
-			#print(ans, "===", ans_pattern)
-	#print("\n\n")
+	## Test pattern frequencies
+	#averages = {}
+	#for g in guesses:
+		#avg = get_average_information(g, answers)
+		#averages[g] = avg
+	#sorted_words = sort_words_by_information(averages)
+	#for i in range(0, 5):
+		#print(sorted_words[i], averages[sorted_words[i]])
 
-
-	# Test pattern frequencies
-	#f = get_pattern_frequencies("hello", answers)
-	#print_dictionary(f)
 
 
 	# Solve

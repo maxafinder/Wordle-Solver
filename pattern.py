@@ -1,4 +1,4 @@
-
+from copy import copy
 
 
 # Get the pattern that would be reveals from a guess if we know the answer.
@@ -42,13 +42,14 @@ def get_pattern_from_words(guess, answer):
 def get_pattern_frequencies(guess, answers):
 	# initialize frequencies
 	frequencies = {}
-	for i in range(0, 243):
-		frequencies[i] = 0
 
 	for answer in answers:
 		pattern = get_pattern_from_words(guess, answer)	
 		index = get_index_from_pattern(pattern)
-		frequencies[index] += 1
+		if index in frequencies:
+			frequencies[index] += 1
+		else:
+			frequencies[index] = 1
 	return frequencies
 
 
@@ -56,13 +57,13 @@ def get_pattern_frequencies(guess, answers):
 #
 def get_index_from_pattern(pattern):
 	evaluations = {}
-	evaluations["absent"] = 0
-	evaluations["present"] = 1
-	evaluations["correct"] = 2
+	evaluations["a"] = 0
+	evaluations["p"] = 1
+	evaluations["c"] = 2
 
 	index = 0
 	for i in range(0, 5):
-		index += evaluations[pattern[i]] * pow(3, i)
+		index += evaluations[pattern[i][0]] * pow(3, i)
 	return index
 
 
