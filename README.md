@@ -8,7 +8,7 @@ This program solves Wordle on "https://www.nytimes.com/wordle".
 
 The algorithm used to solve the wordle uses information theory to find the next best guess. It takes a greedy approach by calculating the expected number of bits of information that it would gain for each valid guess, and then chooses the word with the highest expected information to be the next guess.
 
-The program uses selenium, which contains libraries for browswer automation, to interact with the site using a webdriver. The program supports Chrome and Safari, however if you want to run the solver using Chrome you need to install a Chrome driver following the instructions below.
+The program uses selenium, which contains libraries for browser automation, to interact with the site using a webdriver. The program supports Chrome and Safari, however if you want to run the solver using Chrome you need to install a Chrome driver following the instructions below.
 
 -------------------------------------------------------------------
 
