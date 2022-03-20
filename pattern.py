@@ -20,7 +20,7 @@ def get_pattern_from_words(guess, answer):
 					if guess[j] == guess[i] and pattern[j] == "present":
 						reveal_count += 1
 				
-				for j in range(0, 5):
+				for j in range(0, i):
 					if j != i and guess[j] == guess[i]: # going to be correct hint
 						reveal_count += 1
 
