@@ -14,9 +14,15 @@ if __name__ == "__main__":
 		exit()
 	elif driver == -2:
 		exit()
-	driver.get("https://www.nytimes.com/games/wordle/index.html")
 
-	# Solve
+	# get nytimes wordle with driver
+	try:
+		driver.get("https://www.nytimes.com/games/wordle/index.html")
+	except:
+		print("ERROR: Couldn't open https://www.nytimes.com/games/wordle/index.html")
+		exit()
+
+	# solve
 	answer = solve(driver)
 	if answer != -1:
 		print("\nCorrect Answer:", answer[0], "\nSolved in", answer[1], "guesses.\n")
