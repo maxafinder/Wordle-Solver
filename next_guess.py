@@ -43,8 +43,11 @@ def sort_words_by_information(words_avg_information):
 # @param answers -> a list of answers that are still possible.
 # @return -> the word that has the highest expected bits of information.
 def get_next_guess(guesses, answers):
-	# if last answer
-	if len(answers) == 1:
+	# get the length of answers
+	answers_length = len(answers)
+	
+	# if last answer or two possible answers left
+	if answers_length == 1 or answers_length == 2:
 		print("Guessing answer:")
 		return answers[0]
 
@@ -52,7 +55,7 @@ def get_next_guess(guesses, answers):
 	# information as a first guess and this holds true as long as the bank of words
 	# for possible guesses and answers doesn't change, so as an optimization it
 	# automatically guesses "soare" as the first word without calculating it every time.
-	if len(answers) == 2309: # this is the first guess
+	if answers_length == 2309: # this is the first guess
 		print("Top 5 next guesses:")
 		print("soare 5.885202744292757")
 		print("roate 5.884856313732008")
@@ -60,6 +63,7 @@ def get_next_guess(guesses, answers):
 		print("reast 5.867738020843561")
 		print("raile 5.865153829041269")
 		return "soare"
+
 
 	average_info_bits = {}
 	for g in guesses:
