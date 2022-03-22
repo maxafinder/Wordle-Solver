@@ -1,4 +1,5 @@
 from keyboard import get_keys, guess_word
+from pattern import get_pattern_from_words
 from word_bank import get_answer_bank, get_guess_bank
 from next_guess import get_next_guess, eliminate_answers
 from board import get_pattern_from_row, get_tiles, is_correct
